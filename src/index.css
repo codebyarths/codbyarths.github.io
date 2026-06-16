@@ -1,0 +1,111 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    color-scheme: light;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 84px;
+  }
+
+  body {
+    @apply bg-white font-sans text-charcoal antialiased;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply font-display;
+  }
+
+  ::selection {
+    @apply bg-brand text-white;
+  }
+}
+
+@layer components {
+  .container-x {
+    @apply mx-auto w-full max-w-[1200px] px-5 lg:px-8;
+  }
+
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-semibold tracking-wide transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2;
+  }
+
+  .btn-primary {
+    @apply btn bg-brand-grad text-white shadow-glow hover:-translate-y-0.5 hover:brightness-105 active:translate-y-0;
+  }
+
+  .btn-dark {
+    @apply btn bg-ink text-white hover:bg-graphite;
+  }
+
+  .btn-outline {
+    @apply btn border border-white/30 bg-white/5 text-white backdrop-blur hover:border-brand hover:bg-brand hover:text-white;
+  }
+
+  .btn-ghost {
+    @apply btn border border-charcoal/15 bg-white text-charcoal hover:border-brand hover:text-brand;
+  }
+
+  .chip {
+    @apply inline-flex items-center gap-1.5 rounded-full bg-brand/10 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-brand-700;
+  }
+
+  .input {
+    @apply w-full rounded-xl border border-charcoal/15 bg-white px-3.5 py-2.5 text-sm text-charcoal outline-none transition focus:border-brand focus:ring-2 focus:ring-brand/20;
+  }
+
+  .section {
+    @apply py-20 lg:py-28;
+  }
+
+  .eyebrow {
+    @apply mb-3 inline-flex items-center gap-2 text-sm font-semibold uppercase tracking-[0.2em] text-brand;
+  }
+
+  .card {
+    @apply rounded-2xl border border-charcoal/10 bg-white shadow-card;
+  }
+
+  /* Scroll reveal */
+  .reveal {
+    opacity: 0;
+    transform: translateY(28px);
+    transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+      transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+    will-change: opacity, transform;
+  }
+
+  .reveal.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .bg-grid {
+    background-image: radial-gradient(
+      rgba(255, 255, 255, 0.06) 1px,
+      transparent 1px
+    );
+    background-size: 22px 22px;
+  }
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
