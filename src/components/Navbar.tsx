@@ -16,12 +16,14 @@ export default function Navbar() {
 
   return (
     <header
-      className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ${
+      className={`fixed inset-x-0 top-0 z-50 pt-[env(safe-area-inset-top)] transition-all duration-300 ${
         scrolled
           ? "bg-ink/95 shadow-lg backdrop-blur supports-[backdrop-filter]:bg-ink/80"
           : "bg-gradient-to-b from-ink/70 to-transparent"
       }`}
     >
+      {/* Faixa sólida cobrindo a status bar do iOS (horário/bateria) */}
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-[env(safe-area-inset-top)] bg-ink" />
       <nav className="container-x flex h-[72px] items-center justify-between">
         <a href="#inicio" className="flex items-center gap-3" aria-label={COMPANY.name}>
           <img

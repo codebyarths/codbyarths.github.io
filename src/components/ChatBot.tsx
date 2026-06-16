@@ -30,6 +30,7 @@ const nextId = () => idSeq++;
 export default function ChatBot() {
   const [open, setOpen] = useState(false);
   const [teaser, setTeaser] = useState(false);
+  const [teaserDone, setTeaserDone] = useState(false);
   const [messages, setMessages] = useState<Msg[]>([]);
   const [input, setInput] = useState("");
   const [typing, setTyping] = useState(false);
@@ -42,11 +43,19 @@ export default function ChatBot() {
   const dataRef = useRef<CadastroData>({});
   dataRef.current = data;
 
-  // Teaser depois de alguns segundos (só se nunca abriu).
+  // Teaser: aparece após alguns segundos e some sozinho (uma única vez).
   useEffect(() => {
-    const t = setTimeout(() => setTeaser(true), 4000);
-    return () => clearTimeout(t);
-  }, []);
+    if (teaserDone) return;
+    const show = setTimeout(() => setTeaser(true), 4000);
+    const hide = setTimeout(() => {
+      setTeaser(false);
+      setTeaserDone(true);
+    }, 11000);
+    return () => {
+      clearTimeout(show);
+      clearTimeout(hide);
+    };
+  }, [teaserDone]);
 
   // Mensagem de boas-vindas ao abrir pela primeira vez.
   useEffect(() => {
@@ -57,6 +66,7 @@ export default function ChatBot() {
     }
     if (open) {
       setTeaser(false);
+      setTeaserDone(true);
       setTimeout(() => inputRef.current?.focus(), 150);
     }
   }, [open]); // eslint-disable-line react-hooks/exhaustive-deps
@@ -173,7 +183,7 @@ export default function ChatBot() {
     <>
       {/* Janela do chat */}
       {open && (
-        <div className="fixed bottom-24 right-5 z-50 flex h-[min(620px,calc(100vh-7rem))] w-[min(384px,calc(100vw-2.5rem))] flex-col overflow-hidden rounded-2xl border border-charcoal/10 bg-white shadow-2xl sm:right-6">
+        <div className="fixed bottom-[calc(6rem+env(safe-area-inset-bottom))] right-5 z-50 flex h-[min(620px,calc(100vh-8rem))] w-[min(384px,calc(100vw-2.5rem))] flex-col overflow-hidden rounded-2xl border border-charcoal/10 bg-white shadow-2xl sm:right-6">
           {/* Header */}
           <div className="flex items-center justify-between bg-ink px-4 py-3.5 text-white">
             <div className="flex items-center gap-3">
@@ -286,7 +296,7 @@ export default function ChatBot() {
                   mode === "cadastro" ? "Digite sua resposta..." : "Escreva sua mensagem..."
                 }
                 disabled={typing}
-                className="h-11 flex-1 rounded-xl border border-charcoal/15 bg-white px-3.5 text-sm text-charcoal outline-none transition focus:border-brand focus:ring-2 focus:ring-brand/20 disabled:opacity-60"
+                className="h-11 flex-1 rounded-xl border border-charcoal/15 bg-white px-3.5 text-base text-charcoal outline-none transition focus:border-brand focus:ring-2 focus:ring-brand/20 disabled:opacity-60"
               />
               <button
                 onClick={() => send(input)}
@@ -301,20 +311,32 @@ export default function ChatBot() {
         </div>
       )}
 
-      {/* Teaser */}
+      {/* Teaser (dispensável e some sozinho) */}
       {teaser && !open && (
-        <button
-          onClick={() => setOpen(true)}
-          className="fixed bottom-[6.5rem] right-5 z-40 max-w-[230px] animate-fade-up rounded-2xl rounded-br-md bg-white px-4 py-3 text-left text-sm text-charcoal shadow-card ring-1 ring-charcoal/10 sm:right-6"
-        >
-          <span className="font-semibold">Olá! 👋</span> Posso te ajudar a alugar ou tirar dúvidas?
-        </button>
+        <div className="fixed bottom-[calc(6.5rem+env(safe-area-inset-bottom))] right-5 z-40 max-w-[230px] animate-fade-up sm:right-6">
+          <button
+            onClick={() => setOpen(true)}
+            className="block rounded-2xl rounded-br-md bg-white px-4 py-3 pr-5 text-left text-sm text-charcoal shadow-card ring-1 ring-charcoal/10"
+          >
+            <span className="font-semibold">Olá! 👋</span> Posso te ajudar a alugar ou tirar dúvidas?
+          </button>
+          <button
+            onClick={() => {
+              setTeaser(false);
+              setTeaserDone(true);
+            }}
+            aria-label="Dispensar"
+            className="absolute -right-2 -top-2 flex h-6 w-6 items-center justify-center rounded-full bg-ink text-white shadow ring-2 ring-white transition hover:bg-graphite"
+          >
+            <X className="h-3.5 w-3.5" />
+          </button>
+        </div>
       )}
 
       {/* Botão flutuante */}
       <button
         onClick={() => setOpen((o) => !o)}
-        className="fixed bottom-5 right-5 z-50 flex h-16 w-16 items-center justify-center rounded-full bg-brand-grad text-white shadow-glow transition hover:scale-105 sm:right-6"
+        className="fixed bottom-[calc(1.25rem+env(safe-area-inset-bottom))] right-5 z-50 flex h-16 w-16 items-center justify-center rounded-full bg-brand-grad text-white shadow-glow transition hover:scale-105 sm:right-6"
         aria-label={open ? "Fechar chat" : "Abrir chat"}
       >
         {open ? (
