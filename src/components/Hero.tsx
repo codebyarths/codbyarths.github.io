@@ -88,7 +88,7 @@ export default function Hero() {
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <Field label="Retirada" icon={<CalendarDays className="h-4 w-4" />}>
                 <input
                   type="date"
@@ -142,7 +142,7 @@ function Field({
   children: React.ReactNode;
 }) {
   return (
-    <label className="block">
+    <label className="block min-w-0">
       <span className="mb-1.5 flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide text-charcoal/55">
         <span className="text-brand">{icon}</span>
         {label}
